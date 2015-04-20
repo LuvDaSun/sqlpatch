@@ -27,7 +27,7 @@ writeline();
 writeline();
 
 writeline(
-    "CREATE TABLE IF NOT EXISTS ___patches(id varchar(500) PRIMARY KEY);"
+    "CREATE TABLE IF NOT EXISTS ___patches(id varchar(500) PRIMARY KEY, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);"
 );
 writeline();
 writeline();
