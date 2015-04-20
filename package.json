@@ -1,0 +1,15 @@
+{
+  "name": "sqlpatch",
+  "version": "0.0.0",
+  "description": "",
+  "main": "sqlpatch.js",
+  "bin": {
+    "sqlpatch": "sqlpatch.js"
+  },
+  "dependencies": {
+    "toposort": "~0.2.10"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "BSD-2-Clause"
+}
