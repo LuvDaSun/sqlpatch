@@ -11,5 +11,9 @@
   },
   "devDependencies": {},
   "author": "",
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LuvDaSun/sqlpatch.git"
+  }
 }
