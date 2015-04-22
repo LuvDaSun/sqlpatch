@@ -1,4 +1,4 @@
--- require src/profile.sql
+-- @require profile
 
 CREATE TABLE quote
 (

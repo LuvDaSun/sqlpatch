@@ -1,5 +1,5 @@
--- require src/profile.sql
--- require src/quote.sql
+-- @require profile
+-- @require quote
 
 CREATE TABLE list
 (

@@ -1,22 +1,32 @@
 #!/usr/bin/env node
+
 /* jshint node: true */
 
+var fs = require('fs');
+var path = require('path');
 var pkg = require('./package');
 var toposort = require('toposort');
-var fs = require('fs');
-var dependencyNodes = process.argv.slice(2);
-var dependencyMap = dependencyNodes.reduce(function(map, node) {
-    map[node] = readDependencyList(node);
+var fileList = process.argv.slice(2);
+var fileInfoList = fileList.map(readFileInfo);
+var fileInfoMap = fileInfoList.reduce(function(map, item) {
+    var name;
+    if ('name' in item.properties && item.properties.name.length >= 1) name = item.properties.name[0];
+    else name = path.basename(item.file, '.sql');
+    if (name in map) throw new Error("duplicate name '" + name + "'");
+    map[name] = item;
     return map;
 }, {});
-var dependencyEdges = dependencyNodes.reduce(function(list, node) {
-    dependencyMap[node].forEach(function(dependency) {
-        list.push([node, dependency]);
+
+var nameList = Object.keys(fileInfoMap);
+var nameEdgeList = nameList.reduce(function(list, name) {
+    var fileInfoItem = fileInfoMap[name];
+    if ('require' in fileInfoItem.properties) fileInfoItem.properties.require.forEach(function(dependencyName) {
+        list.push([name, dependencyName]);
     });
     return list;
 }, []);
 
-var dependencyList = toposort.array(dependencyNodes, dependencyEdges);
+var dependencyList = toposort.array(nameList, nameEdgeList);
 dependencyList.reverse();
 
 writeline(
@@ -27,40 +37,39 @@ writeline();
 writeline();
 
 writeline(
-    "CREATE TABLE IF NOT EXISTS ___patches(id varchar(500) PRIMARY KEY, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);"
+    "CREATE TABLE IF NOT EXISTS ___patches(name varchar(100) PRIMARY KEY, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);"
 );
 writeline();
 writeline();
 writeline();
 
 
-dependencyList.forEach(function(src, index) {
-    var dependencyList = dependencyMap[src];
-    var content = fs.readFileSync(src).toString().replace(/(^\s+|\s+$|)/g, "");
+dependencyList.forEach(function(name, index) {
+    var fileInfoItem = fileInfoMap[name];
     var number = index + 1;
 
-    writeline("-- file " + src);
+    writeline("-- " + fileInfoItem.file);
 
     writeline(
         "DO $___patch_" + number + "$",
         "BEGIN"
     );
     writeline(
-        "IF EXISTS (SELECT 1 FROM ___patches WHERE id = '" + src + "') THEN RETURN; END IF;"
+        "IF EXISTS (SELECT 1 FROM ___patches WHERE name = '" + name + "') THEN RETURN; END IF;"
     );
 
-    dependencyList.forEach(function(dependencySrc) {
+    if ('require' in fileInfoItem.properties) fileInfoItem.properties.require.forEach(function(dependencyName) {
         writeline(
-            "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE id = '" + dependencySrc + "') THEN RAISE EXCEPTION 'missing dependency " + dependencySrc + "'; END IF;"
+            "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "') THEN RAISE EXCEPTION 'missing dependency " + dependencyName + "'; END IF;"
         );
     });
 
     writeline();
-    writeline(content);
+    writeline(fileInfoItem.content);
     writeline();
 
     writeline(
-        "INSERT INTO ___patches (id) VALUES('" + src + "');"
+        "INSERT INTO ___patches (name) VALUES('" + name + "');"
     );
     writeline(
         "END",
@@ -76,13 +85,24 @@ function writeline() {
     process.stdout.write(Array.prototype.slice.apply(arguments).join('\n') + '\n');
 }
 
-function readDependencyList(src) {
-    var list = [];
-    var content = fs.readFileSync(src);
+
+function readFileInfo(file) {
+    var content = fs.readFileSync(file).toString().replace(/(^\s+|\s+$|)/g, "");
+    var properties = readProperties(content);
+    return {
+        file: file,
+        content: content,
+        properties: properties,
+    };
+}
+
+function readProperties(content) {
+    var result = {};
     var match;
-    var re = /^\s*\-\-\s*require\s+(.+)\s*$/gm;
+    var re = /^\s*\-\-\s*@(.+?)\s+(.+?)\s*$/gm;
     while ((match = re.exec(content))) {
-        list.push(match[1]);
+        if (match[1] in result) result[match[1]].push(match[2]);
+        else result[match[1]] = [match[2]];
     }
-    return list;
+    return result;
 }

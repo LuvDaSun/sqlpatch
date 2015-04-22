@@ -9,6 +9,7 @@ clean: \
 
 smoke: \
 	dist/out.sql \
+	../../sqlpatch.js \
 
 	@createdb sqlpatch-test-quote
 	@psql -d sqlpatch-test-quote < $<
@@ -20,7 +21,7 @@ dist/out.sql: \
 
 	@mkdir -p $(@D)
 
-	@node ../../sqlpatch $^ > $@
+	node ../../sqlpatch.js $^ > $@
 
 
 .PHONY: \
