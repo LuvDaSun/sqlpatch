@@ -4,7 +4,15 @@ all: \
 
 clean: \
 
-	rm -rf dist
+	@rm -rf dist
+
+
+smoke: \
+	dist/out.sql \
+
+	@createdb sqlpatch-test-quote
+	@psql -d sqlpatch-test-quote < $<
+	@dropdb --if-exists sqlpatch-test-quote
 
 
 dist/out.sql: \
@@ -18,5 +26,6 @@ dist/out.sql: \
 .PHONY: \
 	all \
 	clean \
+	smoke \
 
 
