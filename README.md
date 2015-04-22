@@ -17,7 +17,9 @@ a script that will execute all new SQL files in the right order.
 
 You may specify a dependency using the following syntax:
 
-    -- require src/dependency.sql
+    -- @require dependency
+
+Where dependency is a file name, without the extension or dorectory.
 
 SQLPatch will first sort these SQL files based on their dependencies. Then it
 will wrap some SQL code around it so that you can just dump the generated SQL
