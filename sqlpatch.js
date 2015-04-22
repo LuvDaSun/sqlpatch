@@ -48,7 +48,7 @@ dependencyList.forEach(function(name, index) {
     var fileInfoItem = fileInfoMap[name];
     var number = index + 1;
 
-    writeline("-- " + fileInfoItem.file);
+    writeline("-- " + name + ": " + fileInfoItem.file);
 
     writeline(
         "DO $___patch_" + number + "$",
@@ -60,7 +60,7 @@ dependencyList.forEach(function(name, index) {
 
     if ('require' in fileInfoItem.properties) fileInfoItem.properties.require.forEach(function(dependencyName) {
         writeline(
-            "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "') THEN RAISE EXCEPTION 'missing dependency " + dependencyName + "'; END IF;"
+            "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "') THEN RAISE EXCEPTION 'missing dependency: " + dependencyName + "'; END IF;"
         );
     });
 
