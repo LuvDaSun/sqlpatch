@@ -55,7 +55,7 @@ function sqlpatch(fileList, writer, options) {
         case "sqlserver":
             writeline(
                 "IF OBJECT_ID('___patches', 'U') IS NULL",
-                "CREATE TABLE dbo.___patches(name VARCHAR(100) PRIMARY KEY, created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+                "CREATE TABLE ___patches(name VARCHAR(100) PRIMARY KEY, created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 ";"
             );
             writeline("GO");
