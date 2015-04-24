@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[Projects] (
+CREATE TABLE [Projects] (
     [ProjectKey]                SMALLINT         IDENTITY (1, 1) NOT NULL,
     [ProjectID]                 UNIQUEIDENTIFIER CONSTRAINT [DF_Projects_ProjectID] DEFAULT (newid()) ROWGUIDCOL NOT NULL,
     [ProjectName]               NVARCHAR (100)   NOT NULL,
@@ -22,8 +22,8 @@ CREATE TABLE [dbo].[Projects] (
     [ReportTypeSeed]            TINYINT          CONSTRAINT [DF_Projects_ReportTypeSeed] DEFAULT ((0)) NOT NULL,
     [ReportTypeCount]           TINYINT          CONSTRAINT [DF_Projects_ReportTypeCount] DEFAULT ((0)) NOT NULL,
     [PropertyTypeCount]         SMALLINT         DEFAULT ((0)) NOT NULL,
-    [Timestamp] TIMESTAMP NOT NULL, 
-    [ProjectCode] VARCHAR(24) NULL, 
+    [Timestamp] TIMESTAMP NOT NULL,
+    [ProjectCode] VARCHAR(24) NULL,
     CONSTRAINT [PK_Projects] PRIMARY KEY NONCLUSTERED ([ProjectKey] ASC),
     CONSTRAINT [CK_Projects_InspectionCategoryCount] CHECK ([InspectionCategoryCount]>=(0)),
     CONSTRAINT [CK_Projects_InspectionCount] CHECK ([InspectionCount]>=(0)),

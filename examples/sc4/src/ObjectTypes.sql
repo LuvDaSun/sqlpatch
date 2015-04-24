@@ -1,5 +1,5 @@
 
-CREATE TABLE [dbo].[ObjectTypes] (
+CREATE TABLE [ObjectTypes] (
     [ObjectTypeKey]         SMALLINT         IDENTITY (1, 1) NOT NULL,
     [ObjectTypeID]          UNIQUEIDENTIFIER CONSTRAINT [DF_ObjectTypes_ObjectTypeID] DEFAULT (newid()) ROWGUIDCOL NOT NULL,
     [ObjectTypeName]        NVARCHAR (100)   NOT NULL,

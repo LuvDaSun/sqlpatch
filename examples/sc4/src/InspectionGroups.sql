@@ -1,7 +1,7 @@
--- require Projects
+-- @require Projects
 
 
-CREATE TABLE [dbo].[InspectionGroups] (
+CREATE TABLE [InspectionGroups] (
     [ProjectKey]                 SMALLINT       NOT NULL,
     [InspectionGroupKey]         TINYINT        NOT NULL,
     [InspectionGroupName]        NVARCHAR (100) NOT NULL,
@@ -16,16 +16,17 @@ CREATE TABLE [dbo].[InspectionGroups] (
     CONSTRAINT [CK_InspectionGroups_InspectionCount] CHECK ([InspectionCount]>=(0)),
     CONSTRAINT [CK_InspectionGroups_InspectionGroupKey] CHECK ([InspectionGroupKey]>(0)),
     CONSTRAINT [CK_InspectionGroups_InspectionGroupName] CHECK (ltrim(rtrim([InspectionGroupName]))=[InspectionGroupName] AND [InspectionGroupName]<>''),
-    CONSTRAINT [FK_InspectionGroups_Projects] FOREIGN KEY ([ProjectKey]) REFERENCES [dbo].[Projects] ([ProjectKey]) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT [FK_InspectionGroups_Projects] FOREIGN KEY ([ProjectKey]) REFERENCES [Projects] ([ProjectKey]) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT [UQ_InspectionGroups_InspectionGroupName] UNIQUE NONCLUSTERED ([ProjectKey] ASC, [InspectionGroupName] ASC),
     CONSTRAINT [UQ_InspectionGroups_InspectionGroupPosition] UNIQUE CLUSTERED ([ProjectKey] ASC, [InspectionGroupPosition] ASC)
 );
 
 
-GO
 
-CREATE TRIGGER dbo.TRG_Projects_InspectionGroupCount
-ON dbo.InspectionGroups
+
+EXECUTE('
+CREATE TRIGGER TRG_Projects_InspectionGroupCount
+ON InspectionGroups
 AFTER INSERT, UPDATE, DELETE
 as
 
@@ -50,3 +51,4 @@ inner join (
 	group by ProjectKey
 	) as t1
 	on Projects.ProjectKey = t1.ProjectKey
+');

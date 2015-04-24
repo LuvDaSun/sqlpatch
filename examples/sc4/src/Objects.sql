@@ -1,8 +1,8 @@
--- require Projects
--- require ObjectTypes
+-- @require Projects
+-- @require ObjectTypes
 
 
-CREATE TABLE [dbo].[Objects] (
+CREATE TABLE [Objects] (
     [ProjectKey]      SMALLINT         NOT NULL,
     [ObjectKey]       SMALLINT         NOT NULL,
     [ObjectID]        UNIQUEIDENTIFIER CONSTRAINT [DF_Objects_ObjectID] DEFAULT (newid()) ROWGUIDCOL NOT NULL,
@@ -13,9 +13,9 @@ CREATE TABLE [dbo].[Objects] (
     CONSTRAINT [PK_Objects] PRIMARY KEY NONCLUSTERED ([ProjectKey] ASC, [ObjectKey] ASC),
     CONSTRAINT [CK_Objects_ObjectKey] CHECK ([ObjectKey]>(0)),
     CONSTRAINT [CK_Objects_ParentObjectKey] CHECK ([ParentObjectKey]<[ObjectKey]),
-    CONSTRAINT [FK_Objects_ObjectTypes] FOREIGN KEY ([ObjectTypeKey]) REFERENCES [dbo].[ObjectTypes] ([ObjectTypeKey]) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT [FK_Objects_ParentObjects] FOREIGN KEY ([ProjectKey], [ParentObjectKey]) REFERENCES [dbo].[Objects] ([ProjectKey], [ObjectKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Objects_Projects] FOREIGN KEY ([ProjectKey]) REFERENCES [dbo].[Projects] ([ProjectKey]) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT [FK_Objects_ObjectTypes] FOREIGN KEY ([ObjectTypeKey]) REFERENCES [ObjectTypes] ([ObjectTypeKey]) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT [FK_Objects_ParentObjects] FOREIGN KEY ([ProjectKey], [ParentObjectKey]) REFERENCES [Objects] ([ProjectKey], [ObjectKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT [FK_Objects_Projects] FOREIGN KEY ([ProjectKey]) REFERENCES [Projects] ([ProjectKey]) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT [UQ_Objects_ObjectID] UNIQUE NONCLUSTERED ([ObjectID] ASC),
     CONSTRAINT [UQ_Objects_ObjectPosition] UNIQUE NONCLUSTERED ([ProjectKey] ASC, [ParentObjectKey] ASC, [ObjectPosition] ASC),
     CONSTRAINT [UQ_Objects_ObjectTypeKey] UNIQUE NONCLUSTERED ([ProjectKey] ASC, [ObjectTypeKey] ASC, [ObjectKey] ASC),
@@ -23,10 +23,11 @@ CREATE TABLE [dbo].[Objects] (
 );
 
 
-GO
 
-CREATE TRIGGER [dbo].[TRG_Objects_Update]
-    ON [dbo].[Objects]
+
+EXECUTE('
+CREATE TRIGGER [TRG_Objects_Update]
+    ON [Objects]
     FOR UPDATE
     AS
     BEGIN
@@ -42,3 +43,4 @@ CREATE TRIGGER [dbo].[TRG_Objects_Update]
 		;
 
     END
+');

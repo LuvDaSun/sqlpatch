@@ -1,11 +1,11 @@
--- require InspectionCategories
--- require InspectionGroups
--- require InspectionSeries
--- require ProjectResults
+-- @require InspectionCategories
+-- @require InspectionGroups
+-- @require InspectionSeries
+-- @require ProjectResults
 
 
 
-CREATE TABLE [dbo].[Inspections] (
+CREATE TABLE [Inspections] (
     [ProjectKey]            SMALLINT         NOT NULL,
     [InspectionKey]         SMALLINT         NOT NULL,
     [InspectionID]          UNIQUEIDENTIFIER CONSTRAINT [DF_Inspections_InspectionID] DEFAULT (newid()) ROWGUIDCOL NOT NULL,
@@ -21,18 +21,19 @@ CREATE TABLE [dbo].[Inspections] (
     CONSTRAINT [PK_Inspections] PRIMARY KEY CLUSTERED ([ProjectKey] ASC, [InspectionKey] ASC),
     CONSTRAINT [CK_Inspections_InspectionKey] CHECK ([InspectionKey]>(0)),
     CONSTRAINT [CK_Inspections_InspectionObjectCount] CHECK ([InspectionObjectCount]>=(0)),
-    CONSTRAINT [FK_Inspections_InspectionCategories] FOREIGN KEY ([ProjectKey], [InspectionCategoryKey]) REFERENCES [dbo].[InspectionCategories] ([ProjectKey], [InspectionCategoryKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Inspections_InspectionGroups] FOREIGN KEY ([ProjectKey], [InspectionGroupKey]) REFERENCES [dbo].[InspectionGroups] ([ProjectKey], [InspectionGroupKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Inspections_InspectionSeries] FOREIGN KEY ([ProjectKey], [InspectionSerieKey]) REFERENCES [dbo].[InspectionSeries] ([ProjectKey], [InspectionSerieKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Inspections_ProjectResults] FOREIGN KEY ([ProjectKey], [ProjectResultKey]) REFERENCES [dbo].[ProjectResults] ([ProjectKey], [ProjectResultKey]) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT [FK_Inspections_InspectionCategories] FOREIGN KEY ([ProjectKey], [InspectionCategoryKey]) REFERENCES [InspectionCategories] ([ProjectKey], [InspectionCategoryKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT [FK_Inspections_InspectionGroups] FOREIGN KEY ([ProjectKey], [InspectionGroupKey]) REFERENCES [InspectionGroups] ([ProjectKey], [InspectionGroupKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT [FK_Inspections_InspectionSeries] FOREIGN KEY ([ProjectKey], [InspectionSerieKey]) REFERENCES [InspectionSeries] ([ProjectKey], [InspectionSerieKey]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT [FK_Inspections_ProjectResults] FOREIGN KEY ([ProjectKey], [ProjectResultKey]) REFERENCES [ProjectResults] ([ProjectKey], [ProjectResultKey]) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT [UQ_Inspections_InspectionID] UNIQUE NONCLUSTERED ([InspectionID] ASC)
 );
 
 
-GO
 
-CREATE TRIGGER dbo.TRG_Projects_InspectionCount
-ON dbo.Inspections
+
+EXECUTE('
+CREATE TRIGGER TRG_Projects_InspectionCount
+ON Inspections
 AFTER INSERT, UPDATE, DELETE
 as
 
@@ -57,11 +58,12 @@ inner join (
 	group by ProjectKey
 	) as t1
 	on Projects.ProjectKey = t1.ProjectKey
+');
 
-GO
 
-CREATE TRIGGER dbo.TRG_ProjectResults_InspectionCount
-ON dbo.Inspections
+EXECUTE('
+CREATE TRIGGER TRG_ProjectResults_InspectionCount
+ON Inspections
 AFTER INSERT, UPDATE, DELETE
 as
 
@@ -88,11 +90,12 @@ inner join (
 	) as t1
 	on ProjectResults.ProjectKey = t1.ProjectKey
 	and ProjectResults.ProjectResultKey = t1.ProjectResultKey
+');
 
-GO
 
-CREATE TRIGGER dbo.TRG_InspectionGroups_InspectionCount
-ON dbo.Inspections
+EXECUTE('
+CREATE TRIGGER TRG_InspectionGroups_InspectionCount
+ON Inspections
 AFTER INSERT, UPDATE, DELETE
 as
 
@@ -119,11 +122,12 @@ inner join (
 	) as t1
 	on InspectionGroups.ProjectKey = t1.ProjectKey
 	and InspectionGroups.InspectionGroupKey = t1.InspectionGroupKey
+');
 
-GO
 
-CREATE TRIGGER dbo.TRG_InspectionSeries_InspectionCount
-ON dbo.Inspections
+EXECUTE('
+CREATE TRIGGER TRG_InspectionSeries_InspectionCount
+ON Inspections
 AFTER INSERT, UPDATE, DELETE
 as
 
@@ -150,11 +154,12 @@ inner join (
 	) as t1
 	on InspectionSeries.ProjectKey = t1.ProjectKey
 	and InspectionSeries.InspectionSerieKey = t1.InspectionSerieKey
+');
 
-GO
 
-CREATE TRIGGER dbo.TRG_InspectionCategories_InspectionCount
-ON dbo.Inspections
+EXECUTE('
+CREATE TRIGGER TRG_InspectionCategories_InspectionCount
+ON Inspections
 AFTER INSERT, UPDATE, DELETE
 as
 
@@ -181,3 +186,4 @@ inner join (
 	) as t1
 	on InspectionCategories.ProjectKey = t1.ProjectKey
 	and InspectionCategories.InspectionCategoryKey = t1.InspectionCategoryKey
+');
