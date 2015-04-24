@@ -58,6 +58,7 @@ function sqlpatch(fileList, writer, options) {
                 "CREATE TABLE dbo.___patches(name VARCHAR(100) PRIMARY KEY, created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 ";"
             );
+            writeline("GO");
             break;
     }
     writeline();
@@ -137,6 +138,7 @@ function sqlpatch(fileList, writer, options) {
                     "THROW;",
                     "END CATCH;"
                 );
+                writeline("GO");
                 break;
         }
 
