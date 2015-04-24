@@ -14,7 +14,7 @@ function sqlpatch(fileList, writer, options) {
         dialect: 'postgres'
     }, options);
 
-    if (!~['postgres'].indexOf(options.dialect)) throw new Error("unknown dialect: '" + options.dialect + "'");
+    if (!~['postgres', 'sqlserver'].indexOf(options.dialect)) throw new Error("unknown dialect: '" + options.dialect + "'");
 
     var fileInfoList = fileList.map(readFileInfo);
     var fileInfoMap = fileInfoList.reduce(function(map, item) {
@@ -48,7 +48,15 @@ function sqlpatch(fileList, writer, options) {
     switch (options.dialect) {
         case "postgres":
             writeline(
-                "CREATE TABLE IF NOT EXISTS ___patches(name varchar(100) PRIMARY KEY, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);"
+                "CREATE TABLE IF NOT EXISTS ___patches(name VARCHAR(100) PRIMARY KEY, created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);"
+            );
+            break;
+
+        case "sqlserver":
+            writeline(
+                "IF OBJECT_ID('___patches', 'U') IS NULL",
+                "CREATE TABLE dbo.___patches(name VARCHAR(100) PRIMARY KEY, created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+                ";"
             );
             break;
     }
@@ -73,13 +81,30 @@ function sqlpatch(fileList, writer, options) {
                     "IF EXISTS (SELECT 1 FROM ___patches WHERE name = '" + name + "') THEN RETURN; END IF;"
                 );
                 break;
+
+            case "sqlserver":
+                writeline(
+                    "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + name + "')",
+                    "BEGIN TRY",
+                    "BEGIN TRANSACTION;"
+                );
+                break;
         }
 
         if ('require' in fileInfoItem.properties) fileInfoItem.properties.require.forEach(function(dependencyName) {
             switch (options.dialect) {
                 case "postgres":
                     writeline(
-                        "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "') THEN RAISE EXCEPTION 'missing dependency: " + dependencyName + "'; END IF;"
+                        "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "')",
+                        "THEN RAISE EXCEPTION 'missing dependency: " + dependencyName + "';",
+                        "END IF;"
+                    );
+                    break;
+
+                case "sqlserver":
+                    writeline(
+                        "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "')",
+                        "THROW 50000, 'missing dependency: " + dependencyName + "', 0;"
                     );
                     break;
             }
@@ -97,6 +122,20 @@ function sqlpatch(fileList, writer, options) {
                 writeline(
                     "END",
                     "$___patch_" + number + "$ LANGUAGE plpgsql;"
+                );
+                break;
+
+            case "sqlserver":
+                writeline(
+                    "INSERT INTO ___patches (name) VALUES('" + name + "');"
+                );
+                writeline(
+                    "COMMIT TRANSACTION;",
+                    "END TRY",
+                    "BEGIN CATCH",
+                    "ROLLBACK TRANSACTION;",
+                    "THROW;",
+                    "END CATCH;"
                 );
                 break;
         }
