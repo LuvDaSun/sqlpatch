@@ -2,9 +2,9 @@
   "name": "sqlpatch",
   "version": "0.2.1",
   "description": "",
-  "main": "sqlpatch.js",
+  "main": "cli",
   "bin": {
-    "sqlpatch": "sqlpatch.js"
+    "sqlpatch": "cli"
   },
   "dependencies": {
     "toposort": "~0.2.10",

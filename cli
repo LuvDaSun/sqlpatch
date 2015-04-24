@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+/* jshint node: true */
+
+var sqlpatch = require('./src/sqlpatch');
+
+sqlpatch(process.argv.slice(2), process.stdout, {
+
+});
