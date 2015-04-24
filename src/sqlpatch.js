@@ -14,6 +14,7 @@ function sqlpatch(fileList, writer, options) {
         dialect: 'postgres'
     }, options);
 
+    if (!~['postgres'].indexOf(options.dialect)) throw new Error("unknown dialect: '" + options.dialect + "'");
 
     var fileInfoList = fileList.map(readFileInfo);
     var fileInfoMap = fileInfoList.reduce(function(map, item) {
@@ -44,9 +45,13 @@ function sqlpatch(fileList, writer, options) {
     writeline();
     writeline();
 
-    writeline(
-        "CREATE TABLE IF NOT EXISTS ___patches(name varchar(100) PRIMARY KEY, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);"
-    );
+    switch (options.dialect) {
+        case "postgres":
+            writeline(
+                "CREATE TABLE IF NOT EXISTS ___patches(name varchar(100) PRIMARY KEY, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);"
+            );
+            break;
+    }
     writeline();
     writeline();
     writeline();
@@ -58,31 +63,43 @@ function sqlpatch(fileList, writer, options) {
 
         writeline("-- " + name + ": " + fileInfoItem.file);
 
-        writeline(
-            "DO $___patch_" + number + "$",
-            "BEGIN"
-        );
-        writeline(
-            "IF EXISTS (SELECT 1 FROM ___patches WHERE name = '" + name + "') THEN RETURN; END IF;"
-        );
+        switch (options.dialect) {
+            case "postgres":
+                writeline(
+                    "DO $___patch_" + number + "$",
+                    "BEGIN"
+                );
+                writeline(
+                    "IF EXISTS (SELECT 1 FROM ___patches WHERE name = '" + name + "') THEN RETURN; END IF;"
+                );
+                break;
+        }
 
         if ('require' in fileInfoItem.properties) fileInfoItem.properties.require.forEach(function(dependencyName) {
-            writeline(
-                "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "') THEN RAISE EXCEPTION 'missing dependency: " + dependencyName + "'; END IF;"
-            );
+            switch (options.dialect) {
+                case "postgres":
+                    writeline(
+                        "IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '" + dependencyName + "') THEN RAISE EXCEPTION 'missing dependency: " + dependencyName + "'; END IF;"
+                    );
+                    break;
+            }
         });
 
         writeline();
         writeline(fileInfoItem.content);
         writeline();
 
-        writeline(
-            "INSERT INTO ___patches (name) VALUES('" + name + "');"
-        );
-        writeline(
-            "END",
-            "$___patch_" + number + "$ LANGUAGE plpgsql;"
-        );
+        switch (options.dialect) {
+            case "postgres":
+                writeline(
+                    "INSERT INTO ___patches (name) VALUES('" + name + "');"
+                );
+                writeline(
+                    "END",
+                    "$___patch_" + number + "$ LANGUAGE plpgsql;"
+                );
+                break;
+        }
 
         writeline();
         writeline();
