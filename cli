@@ -3,11 +3,8 @@
 /* jshint node: true */
 
 var sqlpatch = require('./src/sqlpatch');
-var extend = require('extend');
 var nopt = require('nopt');
 
-var options = extend({
-    dialect: 'postgres'
-}, nopt({}, {}, process.argv, 2));
+var options = nopt({}, {}, process.argv, 2);
 
 sqlpatch(options.argv.remain, process.stdout, options);

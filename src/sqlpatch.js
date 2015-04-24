@@ -6,8 +6,14 @@ var fs = require('fs');
 var path = require('path');
 var pkg = require('../package');
 var toposort = require('toposort');
+var extend = require('extend');
 
 function sqlpatch(fileList, writer, options) {
+
+    options = extend({
+        dialect: 'postgres'
+    }, options);
+
 
     var fileInfoList = fileList.map(readFileInfo);
     var fileInfoMap = fileInfoList.reduce(function(map, item) {
