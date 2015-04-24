@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "toposort": "~0.2.10",
-    "nopt": "~3.0.1"
+    "nopt": "~3.0.1",
+    "extend": "~2.0.0"
   },
   "devDependencies": {},
   "author": "",
