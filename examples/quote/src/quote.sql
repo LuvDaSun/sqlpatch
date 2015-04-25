@@ -1,4 +1,4 @@
--- @require profile
+-- @require user_profile
 
 CREATE TABLE quote
 (

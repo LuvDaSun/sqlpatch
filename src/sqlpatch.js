@@ -70,6 +70,16 @@ function sqlpatch(fileList, writer, options) {
         var fileInfoItem = fileInfoMap[name];
         var number = index + 1;
 
+        if (!fileInfoItem) {
+            if (options.requireAll) {
+                throw new Error('missing dependency: ' + name + '');
+            }
+            else {
+                writeline("-- " + name + "");
+                return;
+            }
+        }
+
         writeline("-- " + name + ": " + fileInfoItem.file);
 
         switch (options.dialect) {

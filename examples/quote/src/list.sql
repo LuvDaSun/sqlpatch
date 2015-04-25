@@ -1,4 +1,4 @@
--- @require profile
+-- @require user_profile
 -- @require quote
 
 CREATE TABLE list
