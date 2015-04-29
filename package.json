@@ -7,9 +7,10 @@
     "sqlpatch": "cli"
   },
   "dependencies": {
-    "toposort": "~0.2.10",
+    "extend": "~2.0.0",
+    "mustache": "^2.0.0",
     "nopt": "~3.0.1",
-    "extend": "~2.0.0"
+    "toposort": "~0.2.10"
   },
   "devDependencies": {},
   "author": "",
