@@ -40,7 +40,6 @@ function sqlpatch(fileList, writer, options) {
                 return ~nameList.indexOf(dependencyName);
             }).
             forEach(function(dependencyName) {
-
                 list.push([name, dependencyName]);
             });
         }
@@ -53,13 +52,6 @@ function sqlpatch(fileList, writer, options) {
 
     model.patches = dependencyList.map(function(name, index) {
         var fileInfoItem = fileInfoMap[name];
-        var number = index + 1;
-
-        if (!fileInfoItem) {
-            if (options.requireAll) {
-                throw new Error('missing dependency: ' + name + '');
-            }
-        }
 
         return fileInfoItem;
     }).
