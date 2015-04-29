@@ -19,8 +19,8 @@ BEGIN
     END IF;
 
     {{#properties.require}}
-    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&.}}')
-        THEN RAISE EXCEPTION 'missing dependency: {{&.}}';
+    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&.}}') THEN
+        RAISE EXCEPTION 'missing dependency: {{&.}}';
     END IF;
     {{/properties.require}}
 
