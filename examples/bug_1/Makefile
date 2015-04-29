@@ -11,9 +11,9 @@ smoke: \
 	dist/out.sql \
 	../../cli \
 
-	@createdb sqlpatch-test-quote
-	@psql -d sqlpatch-test-quote < $<
-	@dropdb sqlpatch-test-quote
+	@createdb sqlpatch-test-bug_1
+	@psql -d sqlpatch-test-bug_1 < $<
+	@dropdb sqlpatch-test-bug_1
 
 
 dist/out.sql: \

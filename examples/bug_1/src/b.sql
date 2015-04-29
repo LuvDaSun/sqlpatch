@@ -1,0 +1,3 @@
+-- @require c
+
+CREATE TABLE b(id SERIAL PRIMARY KEY);

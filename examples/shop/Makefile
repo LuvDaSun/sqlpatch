@@ -13,7 +13,7 @@ smoke: \
 
 	@createdb sqlpatch-test-quote
 	@psql -d sqlpatch-test-quote < $<
-	@dropdb --if-exists sqlpatch-test-quote
+	@dropdb sqlpatch-test-quote
 
 
 dist/out.sql: \
