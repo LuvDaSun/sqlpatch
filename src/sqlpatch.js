@@ -34,13 +34,21 @@ function sqlpatch(fileList, writer, options) {
     var nameList = Object.keys(fileInfoMap);
     var nameEdgeList = nameList.reduce(function(list, name) {
         var fileInfoItem = fileInfoMap[name];
-        if ('require' in fileInfoItem.properties) fileInfoItem.properties.require.forEach(function(dependencyName) {
-            list.push([name, dependencyName]);
-        });
+        if ('require' in fileInfoItem.properties) {
+            fileInfoItem.properties.require.
+            filter(function(dependencyName) {
+                return ~nameList.indexOf(dependencyName);
+            }).
+            forEach(function(dependencyName) {
+
+                list.push([name, dependencyName]);
+            });
+        }
         return list;
     }, []);
 
     var dependencyList = toposort.array(nameList, nameEdgeList);
+
     dependencyList.reverse();
 
     model.patches = dependencyList.map(function(name, index) {
