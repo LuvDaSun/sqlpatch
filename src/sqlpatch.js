@@ -48,7 +48,7 @@ function sqlpatch(fileList, writer, options) {
     switch (options.dialect) {
         case "postgres":
             writeline(
-                "CREATE TABLE IF NOT EXISTS ___patches(name VARCHAR(100) PRIMARY KEY, created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);"
+                "CREATE TABLE IF NOT EXISTS ___patches(name VARCHAR(100) PRIMARY KEY, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);"
             );
             break;
 
