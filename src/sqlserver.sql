@@ -26,7 +26,7 @@ BEGIN TRY
     END
     {{/properties.require}}
 
-    {{&content}}
+{{&content}}
 
     INSERT INTO ___patches (name) VALUES('{{&name}}');
 
