@@ -19,7 +19,7 @@ You may specify a dependency using the following syntax:
 
     -- @require dependency
 
-Where dependency is a file name, without the extension or dorectory.
+Where dependency is a file name, without the extension or directory.
 
 SQLPatch will first sort these SQL files based on their dependencies. Then it
 will wrap some SQL code around it so that you can just dump the generated SQL
