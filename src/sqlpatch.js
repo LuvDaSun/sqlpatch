@@ -35,7 +35,11 @@ function sqlpatch(fileList, writer, options) {
     fileInfoList.forEach(function(fileInfoItem) {
         if (fileInfoItem.properties.require) {
             fileInfoItem.dependencies = fileInfoItem.properties.require.map(function(name) {
-                return fileInfoMap[name];
+                if (name in fileInfoMap) return fileInfoMap[name];
+                else return {
+                    name: name,
+                    checksum: null,
+                };
             });
         }
     });

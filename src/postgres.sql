@@ -20,7 +20,7 @@ BEGIN
     END IF;
 
     {{#dependencies}}
-    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&name}}' AND checksum = '{{&checksum}}') THEN
+    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&name}}' AND '{{&checksum}}' IN (checksum, '')) THEN
         RAISE EXCEPTION 'missing dependency or invalid checksum: {{&name}}';
     END IF;
     {{/dependencies}}

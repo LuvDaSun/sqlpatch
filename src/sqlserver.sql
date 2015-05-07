@@ -20,7 +20,7 @@ BEGIN TRY
     BEGIN TRANSACTION;
 
     {{#dependencies}}
-    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&name}}' AND checksum = '{{&checksum}}')
+    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&name}}' AND '{{&checksum}}' IN (checksum, ''))
     BEGIN
         THROW 50000, 'missing dependency or invalid checksum: {{&name}}', 0;
     END
