@@ -19,11 +19,11 @@ BEGIN
         RETURN;
     END IF;
 
-    {{#properties.require}}
-    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&.}}') THEN
-        RAISE EXCEPTION 'missing dependency: {{&.}}';
+    {{#dependencies}}
+    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&name}}' AND checksum = '{{&checksum}}') THEN
+        RAISE EXCEPTION 'missing dependency or invalid checksum: {{&name}}';
     END IF;
-    {{/properties.require}}
+    {{/dependencies}}
 
 {{&content}}
 

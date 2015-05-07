@@ -19,13 +19,12 @@ IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&name}}')
 BEGIN TRY
     BEGIN TRANSACTION;
 
-
-    {{#properties.require}}
-    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&.}}')
+    {{#dependencies}}
+    IF NOT EXISTS (SELECT 1 FROM ___patches WHERE name = '{{&name}}' AND checksum = '{{&checksum}}')
     BEGIN
-        THROW 50000, 'missing dependency: {{&.}}', 0;
+        THROW 50000, 'missing dependency or invalid checksum: {{&name}}', 0;
     END
-    {{/properties.require}}
+    {{/dependencies}}
 
 {{&content}}
 

@@ -32,6 +32,14 @@ function sqlpatch(fileList, writer, options) {
         return map;
     }, {});
 
+    fileInfoList.forEach(function(fileInfoItem) {
+        if (fileInfoItem.properties.require) {
+            fileInfoItem.dependencies = fileInfoItem.properties.require.map(function(name) {
+                return fileInfoMap[name];
+            });
+        }
+    });
+
     var nameList = Object.keys(fileInfoMap);
     var nameEdgeList = nameList.reduce(function(list, name) {
         var fileInfoItem = fileInfoMap[name];
