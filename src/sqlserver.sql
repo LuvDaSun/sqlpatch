@@ -4,7 +4,8 @@ IF OBJECT_ID('___patches', 'U') IS NULL
 BEGIN
     CREATE TABLE ___patches(
         name VARCHAR(100) PRIMARY KEY,
-        created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        checksum CHAR(40) NULL
     )
 END
 GO
@@ -28,7 +29,7 @@ BEGIN TRY
 
 {{&content}}
 
-    INSERT INTO ___patches (name) VALUES('{{&name}}');
+    INSERT INTO ___patches (name, checksum) VALUES('{{&name}}', '{{checksum}}');
 
     COMMIT TRANSACTION;
 END TRY

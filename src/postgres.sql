@@ -2,7 +2,8 @@
 
 CREATE TABLE IF NOT EXISTS ___patches(
     name VARCHAR(100) PRIMARY KEY,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    checksum CHAR(40) NULL
 );
 
 
@@ -26,7 +27,7 @@ BEGIN
 
 {{&content}}
 
-    INSERT INTO ___patches (name) VALUES('{{&name}}');
+    INSERT INTO ___patches (name, checksum) VALUES('{{&name}}', '{{&checksum}}');
 
 END
 $___patch_{{&number}}$ LANGUAGE plpgsql;
