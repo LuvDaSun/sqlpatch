@@ -8,6 +8,7 @@ var pkg = require('../package');
 var toposort = require('toposort');
 var extend = require('extend');
 var Mustache = require('mustache');
+var crypto = require('crypto');
 
 function sqlpatch(fileList, writer, options) {
 
@@ -70,12 +71,16 @@ function sqlpatch(fileList, writer, options) {
 }
 
 function readFileInfo(file) {
+    var checksum = crypto.createHash('sha1');
     var content = fs.readFileSync(file).toString().replace(/(^\s+|\s+$|)/g, "");
+    checksum.update(content.replace(/(\-\-.*$|\/\*[.\n]*?\*\/|[\n\s]*)*/gm, ''));
+
     var properties = readProperties(content);
     return {
         file: file,
         content: content,
         properties: properties,
+        checksum: checksum.digest('hex'),
     };
 }
 
