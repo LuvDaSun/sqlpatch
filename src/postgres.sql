@@ -25,6 +25,8 @@ BEGIN
     END IF;
     {{/dependencies}}
 
+    RAISE NOTICE '{{&name}}';
+
 {{&content}}
 
     INSERT INTO ___patches (name, checksum) VALUES('{{&name}}', '{{&checksum}}');
