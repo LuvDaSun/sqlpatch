@@ -39,5 +39,3 @@ END
 $___patch_{{&number}}$ LANGUAGE plpgsql;
 
 {{/patches}}
-
-RAISE NOTICE 'everything is ok!';
