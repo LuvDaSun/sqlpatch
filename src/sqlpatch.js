@@ -15,7 +15,7 @@ function sqlpatch(fileList, writer, options) {
     options = extend({
         dialect: 'postgres',
         schema: 'sqlpatch',
-        table: 'rollup_000',
+        table: 'batch_000',
     }, options);
 
     var template = fs.readFileSync(__dirname + '/' + options.dialect + '.sql').toString();
