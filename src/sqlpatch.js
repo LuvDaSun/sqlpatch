@@ -13,12 +13,15 @@ var crypto = require('crypto');
 function sqlpatch(fileList, writer, options) {
 
     options = extend({
-        dialect: 'postgres'
+        dialect: 'postgres',
+        schema: 'sqlpatch',
+        table: 'rollup_000',
     }, options);
 
     var template = fs.readFileSync(__dirname + '/' + options.dialect + '.sql').toString();
     var model = {
-        pkg: pkg
+        pkg: pkg,
+        options: options,
     };
 
     var fileInfoList = fileList.map(readFileInfo).map(function(item) {

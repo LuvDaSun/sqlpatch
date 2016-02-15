@@ -6,7 +6,11 @@ var sqlpatch = require('./src/sqlpatch');
 var nopt = require('nopt');
 var glob = require("glob");
 
-var options = nopt({}, {}, process.argv, 2);
+var options = nopt({
+    dialect: [String],
+    schema: [String],
+    table: [String],
+}, {}, process.argv, 2);
 
 sqlpatch(options.argv.remain.reduce(function(list, src) {
     return list.concat(glob.sync(src));
