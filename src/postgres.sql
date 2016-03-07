@@ -22,7 +22,7 @@ BEGIN
     END IF;
 
     {{#dependencies}}
-    IF NOT EXISTS (SELECT 1 FROM "{{&options.schema}}"."{{&options.table}}" WHERE name = '{{&name}}' AND '{{&checksum}}' IN (checksum, '')) THEN
+    IF NOT EXISTS (SELECT 1 FROM "{{&options.schema}}"."{{&options.table}}" WHERE name = '{{&name}}' AND (checksum = '{{&checksum}}' OR checksum IS NULL)) THEN
         RAISE EXCEPTION 'missing dependency or invalid checksum: {{&name}}';
     END IF;
     {{/dependencies}}
