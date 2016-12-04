@@ -7,8 +7,7 @@
     "sqlpatch": "cli"
   },
   "dependencies": {
-    "extend": "~2.0.0",
-    "glob": "^5.0.5",
+    "glob": "^5.0.6",
     "mustache": "^2.0.0",
     "nopt": "~3.0.1",
     "toposort": "~0.2.10"
