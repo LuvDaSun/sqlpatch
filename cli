@@ -12,6 +12,6 @@ var options = nopt({
     table: [String],
 }, {}, process.argv, 2);
 
-sqlpatch(options.argv.remain.reduce(function(list, src) {
+process.stdout.write(sqlpatch(options.argv.remain.reduce(function(list, src) {
     return list.concat(glob.sync(src));
-}, []), process.stdout, options);
+}, []), options));

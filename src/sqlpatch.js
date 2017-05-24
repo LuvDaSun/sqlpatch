@@ -10,7 +10,7 @@ var extend = require('extend');
 var Mustache = require('mustache');
 var crypto = require('crypto');
 
-function sqlpatch(fileList, writer, options) {
+function sqlpatch(fileList, options) {
 
     options = extend({
         dialect: 'postgres',
@@ -82,7 +82,7 @@ function sqlpatch(fileList, writer, options) {
         return item;
     });
 
-    writer.write(Mustache.render(template, model));
+    return Mustache.render(template, model);
 }
 
 function readFileInfo(file) {
