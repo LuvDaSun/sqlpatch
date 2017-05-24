@@ -2,7 +2,7 @@
   "name": "sqlpatch",
   "version": "0.5.3",
   "description": "",
-  "main": "cli",
+  "main": "./src/sqlpatch.js",
   "bin": {
     "sqlpatch": "cli"
   },
