@@ -48,6 +48,10 @@ function sqlpatch(fileList, options) {
     });
 
     var nameList = Object.keys(fileInfoMap);
+    
+    nameList.sort();
+    nameList.reverse();
+
     var nameEdgeList = nameList.reduce(function(list, name) {
         var fileInfoItem = fileInfoMap[name];
         if ('require' in fileInfoItem.properties) {
