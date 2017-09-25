@@ -1,0 +1,10 @@
+language: node_js
+node_js: 6
+deploy:
+  provider: npm
+  email: elmerbulthuis@gmail.com
+  api_key:
+    secure: URAb512UgtIodIxge//LSFmFcfeDjMxyLnuPCBWSVSd3CbJCEbfvyDgNEN0tlCOB4NqooF4mMSSymG2d4cIrO4J1upYJc22BMrpsk3HpAuySvyAC78Vhd1BpXK9T+McFii/OdrVIqGg1CSq/5t8bnpehKJdKFsUmvjhf1J7eQAA=
+  on:
+    tags: true
+    repo: LuvDaSun/sqlpatch
