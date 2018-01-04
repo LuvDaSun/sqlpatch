@@ -1,6 +1,6 @@
 {
   "name": "sqlpatch",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "",
   "main": "./src/sqlpatch.js",
   "types": "./src/sqlpatch.d.ts",
