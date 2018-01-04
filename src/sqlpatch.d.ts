@@ -6,4 +6,4 @@ interface SqlPatchOptions{
     table: string;
 }
 
-declare function sqlpatch(fileList: string[], options: SqlPatchOptions);
+declare function sqlpatch(fileList: string[], options: SqlPatchOptions):string;
