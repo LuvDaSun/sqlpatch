@@ -3,4 +3,4 @@ export interface SqlPatchOptions{
     schema: string;
     table: string;
 }
-export declare function sqlpatch(fileList: string[], options: SqlPatchOptions);
+export default function sqlpatch(fileList: string[], options: SqlPatchOptions);
