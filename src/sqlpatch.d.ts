@@ -1,6 +1,9 @@
-export interface SqlPatchOptions{
+export = sqlpatch;
+
+interface SqlPatchOptions{
     dialect: string;
     schema: string;
     table: string;
 }
-export default function sqlpatch(fileList: string[], options: SqlPatchOptions);
+
+declare function sqlpatch(fileList: string[], options: SqlPatchOptions);
