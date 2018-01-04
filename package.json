@@ -3,6 +3,7 @@
   "version": "0.5.7",
   "description": "",
   "main": "./src/sqlpatch.js",
+  "types": "./src/sqlpatch.d.ts",
   "bin": {
     "sqlpatch": "cli"
   },
