@@ -2,7 +2,7 @@
 
 /* jshint node: true */
 
-var sqlpatch = require('./src/sqlpatch');
+var sqlpatch = require('./src/sqlpatch').sqlpatch;
 var nopt = require('nopt');
 var glob = require("glob");
 

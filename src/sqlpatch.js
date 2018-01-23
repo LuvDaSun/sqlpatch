@@ -1,6 +1,8 @@
 /* jshint node: true */
 
-module.exports = sqlpatch;
+module.exports = {
+    sqlpatch: sqlpatch,
+}
 
 var fs = require('fs');
 var path = require('path');
