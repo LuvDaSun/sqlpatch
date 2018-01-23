@@ -4,7 +4,6 @@ module.exports = sqlpatch;
 
 var fs = require('fs');
 var path = require('path');
-var pkg = require('../package');
 var toposort = require('toposort');
 var extend = require('extend');
 var Mustache = require('mustache');
@@ -20,7 +19,6 @@ function sqlpatch(fileList, options) {
 
     var template = fs.readFileSync(__dirname + '/' + options.dialect + '.sql').toString();
     var model = {
-        pkg: pkg,
         options: options,
     };
 
